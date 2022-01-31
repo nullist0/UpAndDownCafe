@@ -1,25 +1,35 @@
 import React, { useState } from 'react';
 import {
-  Button,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import GuessPanel from './components/GuessPanel';
+import buildDefaultGame from './up_and_down/default_game/default_game';
 
-const App = () => {
+const GuessResult = ({ result = undefined }) => {
+  if(!result) return null;
+  return (
+    <Text testID='guess-result-text'>{result}</Text>
+  )
+};
+
+const App = ({ game = buildDefaultGame((() => {
+  const answer = Math.floor(Math.random() * 1000);
+  return () => answer;
+})()) }) => {
   const [guess, setGuess] = useState(0);
+  const [result, setResult] = useState();
   return (
     <SafeAreaView>
       <Text testID='guess-text'>{guess}</Text>
-      {
-      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => 
-      <TouchableOpacity key={i} testID={`guess-${i}`} onPress={() => setGuess(guess * 10 + i)}>
-        <Text>i</Text>
-      </TouchableOpacity>
-      )
-      }
+      <GuessPanel 
+        onInputGuess={number => setGuess(guess * 10 + number)}
+        onRemoveGuess={() => setGuess(Math.floor(guess / 10))}
+        onSubmitGuess={() => setResult(game.guess(guess))}/>
+      <GuessResult {...result} />
     </SafeAreaView>
   );
 };
