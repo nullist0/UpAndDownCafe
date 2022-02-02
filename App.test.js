@@ -1,12 +1,12 @@
 import React from 'react';
-import { fireEvent, render } from "@testing-library/react-native";
-import App from "./App";
-import buildDefaultGame from "./up_and_down/default_game/default_game";
+import {fireEvent, render} from '@testing-library/react-native';
+import App from './App';
+import {buildDefaultGame} from './up_and_down/default_game/default_game';
 
 describe('default game tests', () => {
   const answer = 500;
   const nextAnswer = () => answer;
-  const defaultGame = buildDefaultGame(nextAnswer);
+  const defaultGameBuilder = () => buildDefaultGame(nextAnswer);
 
   let inputGuess;
   let removeGuess;
@@ -15,33 +15,56 @@ describe('default game tests', () => {
   let hasResultText;
 
   beforeEach(() => {
-    const { getByTestId } = render(<App game={defaultGame}/>);
+    const {getByTestId} = render(<App gameBuilder={defaultGameBuilder} />);
     const createInputGuessFunction = getByTestId => {
-      const findInputGuessElement = getByTestId => n => getByTestId(`guess-${n}`)
+      const findInputGuessElement = getByTestId => n =>
+        getByTestId(`guess-${n}`);
       const press = findInput => n => fireEvent.press(findInput(n));
       const inputGuess = press => n => n.toString().split('').forEach(press);
-      return [findInputGuessElement, press, inputGuess].reduce((val, fn) => fn(val), getByTestId); 
+      return [findInputGuessElement, press, inputGuess].reduce(
+        (val, fn) => fn(val),
+        getByTestId,
+      );
     };
     const createRemoveGuessFunction = getByTestId => {
-      const findRemoveGuessElement = getByTestId => () => getByTestId(`guess-backspace`);
+      const findRemoveGuessElement = getByTestId => () =>
+        getByTestId(`guess-backspace`);
       const press = findElement => () => fireEvent.press(findElement());
-      return [findRemoveGuessElement, press].reduce((val, fn) => fn(val), getByTestId);
+      return [findRemoveGuessElement, press].reduce(
+        (val, fn) => fn(val),
+        getByTestId,
+      );
     };
     const createSubmitGuessFunction = getByTestId => {
-      const findSubmitGuessElement = getByTestId => () => getByTestId('guess-submit');
+      const findSubmitGuessElement = getByTestId => () =>
+        getByTestId('guess-submit');
       const press = findElement => () => fireEvent.press(findElement());
-      return [findSubmitGuessElement, press].reduce((val, fn) => fn(val), getByTestId);
+      return [findSubmitGuessElement, press].reduce(
+        (val, fn) => fn(val),
+        getByTestId,
+      );
     };
     const createHasGuessTextFunction = getByTestId => {
-      const findGuessTextElement = getByTestId => () => getByTestId('guess-text');
-      const getGuessText = findGuessTextElement => () => Number(findGuessTextElement().children[0]);
-      const assertGuessText = getGuessText => n => expect(getGuessText()).toBe(n);
-      return [findGuessTextElement, getGuessText, assertGuessText].reduce((val, fn) => fn(val), getByTestId); 
+      const findGuessTextElement = getByTestId => () =>
+        getByTestId('guess-text');
+      const getGuessText = findGuessTextElement => () =>
+        Number(findGuessTextElement().children[0]);
+      const assertGuessText = getGuessText => n =>
+        expect(getGuessText()).toBe(n);
+      return [findGuessTextElement, getGuessText, assertGuessText].reduce(
+        (val, fn) => fn(val),
+        getByTestId,
+      );
     };
     const createHasResultTextFunction = getByTestId => {
-      const findResultTextElement = getByTestId => () => getByTestId('guess-result-text');
-      const assertResultText = findElement => result => expect(findElement().children[0]).toBe(result);
-      return [findResultTextElement, assertResultText].reduce((val, fn) => fn(val), getByTestId);
+      const findResultTextElement = getByTestId => () =>
+        getByTestId('guess-result-text');
+      const assertResultText = findElement => result =>
+        expect(findElement().children[0]).toBe(result);
+      return [findResultTextElement, assertResultText].reduce(
+        (val, fn) => fn(val),
+        getByTestId,
+      );
     };
     inputGuess = createInputGuessFunction(getByTestId);
     removeGuess = createRemoveGuessFunction(getByTestId);
@@ -78,11 +101,11 @@ describe('default game tests', () => {
     // given
     const guessValue = 600;
     const upText = 'up';
-    
+
     // when
     inputGuess(guessValue);
     submitGuess();
-    
+
     // then
     hasResultText(upText);
   });
@@ -91,11 +114,11 @@ describe('default game tests', () => {
     // given
     const guessValue = 400;
     const downText = 'down';
-    
+
     // when
     inputGuess(guessValue);
     submitGuess();
-    
+
     // then
     hasResultText(downText);
   });
@@ -104,11 +127,11 @@ describe('default game tests', () => {
     // given
     const guessValue = answer;
     const equalText = 'equal';
-    
+
     // when
     inputGuess(guessValue);
     submitGuess();
-    
+
     // then
     hasResultText(equalText);
   });
