@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Text} from 'react-native';
 import GuessPanel from './GuessPanel';
+import GuessResult from './GuessResult';
 
 const useGame = game => {
   const [guess, setGuess] = useState(0);
@@ -9,11 +10,6 @@ const useGame = game => {
   const removeGuess = () => setGuess(Math.floor(guess / 10));
   const guessAnswer = () => setResult(game.guess(guess));
   return {guess, result, inputGuess, removeGuess, guessAnswer};
-};
-
-const GuessResult = ({result = undefined}) => {
-  if (!result) return null;
-  return <Text testID="guess-result-text">{result}</Text>;
 };
 
 const Game = ({game = {}}) => {

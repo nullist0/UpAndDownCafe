@@ -3,7 +3,6 @@ import Result from './game_result';
 function buildDefaultGame(nextAnswer) {
   const guess = guess => {
     const answer = nextAnswer();
-    console.log(answer);
     if (answer < guess) {
       return Result.up;
     } else if (answer > guess) {

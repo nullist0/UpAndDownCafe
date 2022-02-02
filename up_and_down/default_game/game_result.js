@@ -1,5 +1,5 @@
 function Result(result) {
-    this.result = result;
+  this.result = result;
 }
 
 Result.up = new Result('up');
